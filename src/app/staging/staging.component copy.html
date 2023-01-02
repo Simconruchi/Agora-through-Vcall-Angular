@@ -1,0 +1,146 @@
+<div [hidden]="callStarted" class="non-call-con">
+    <div class="container diplay-view body">
+        <div class="my-row">
+            <div class="col-lg-12 meeting-info">
+                <div class="brand">
+                    <h1>Video Conf. {{urlId}}</h1>
+                </div>
+                <div class="back-icon header-icon">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </div>
+                <div class="flip header-icon">
+                    <i class="fa fa-volume-up" aria-hidden="true"></i>
+                </div>
+                <div class="speaker header-icon">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class="col-lg-12 members">
+                <div>
+                    <div class="my-video">
+                        <a href=""><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                        <video #streamVideo class="h-100 mh-100 mw-100 w-100 screen-play" style="
+                object-fit: cover;
+                -webkit-transform: scaleX(-1);
+                transform: scaleX(-1);
+              " id="streamVideo" [ngStyle]="{ display: isVideoStreaming ? 'block' : 'none' }"></video>
+                    </div>
+                </div>
+                <div class="footer">
+                    <span>Joining as</span>
+                    <p>
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <input class="username" type="text" placeholder="Enter name" [(ngModel)]="userName" />
+                    </p>
+                    <div class="controls">
+                        <div class="video-status controls-icon" style="background-color: white; color: #838383">
+                            <i class="fa fa-video" aria-hidden="true" *ngIf="toggleCamera" (click)="setVideo()"></i>
+                            <img src="../../assets/video-slash-solid.svg" alt="" *ngIf="!toggleCamera"
+                                (click)="setVideo()" style="width: 100%;
+              height: 100%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              padding: 5px;
+              font-size: 25px;
+              border: 1px solid #838383;
+              border-radius: 50px;">
+                        </div>
+                        <div class="mic-status controls-icon" style="background-color: white;
+                color: #838383">
+                            <i class="fa fa-microphone" aria-hidden="true" *ngIf="toggleAudio" (click)="setAudio()"></i>
+                            <i class="fa fa-microphone-slash" aria-hidden="true" *ngIf="!toggleAudio"
+                                (click)="setAudio()"></i>
+                            <audio controls #streamAudio [ngStyle]="{ display: isAudioStreaming ? 'block' : 'none' }">
+                                <source id=" streamAudio" type="audio/mp3">
+                                Listen
+                            </audio>
+                        </div>
+                        <button type="button" (click)="startCall()" *ngIf="urlId == '1'">Start call</button>
+                        <button type="button" (click)="joinCall()" *ngIf="urlId == '2'">Join</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div [hidden]="!callStarted" class="call-con">
+    <div class="container diplay-view call-header">
+        <div class="my-row">
+            <div class="col-lg-12 meeting-info" style="flex-grow: 1;">
+                <span>Meeting</span>
+                <span class="time-on-call">{{hours == 0 ? '00': hours}}:{{minutes == 0 ? '00':
+                    minutes}}: {{second}}</span>
+            </div>
+            <div class="col-lg-12 members" style="flex-grow: 8;">
+                <div class="users" [ngClass]="{'my-users-class': stream.remoteUsers.length == 1,
+                        'my-users-class2':stream.remoteUsers.length == 2
+                          }">
+                    <div class="local-user">
+                        <!-- <fa-icon *ngIf="!stream.videoStatus" [icon]="faVideoSlash" [classes]="['my-video-camera-slash']"
+                            [styles]="{'color': 'red', 'width': '50px', 'height': '50px'  }">
+                        </fa-icon>
+                        <div id="local-player" class="player" [ngClass]="{'enableDisable' : !stream.videoStatus}"> -->
+                        <video #streamVideo1 class="w-100 screen-play" style="
+                            object-fit: cover;
+                            -webkit-transform: scaleX(-1);
+                            transform: scaleX(-1);
+                          " id="streamVideo1" [ngStyle]="{ display: isVideoStreaming ? 'block' : 'none' }"></video>
+                    </div>
+                    <p>{{stream?.name}}</p>
+                    <div class="screen" *ngIf="stream.isScreenShared == true" id="screens">
+
+                    </div>
+                    <div class="other-users" [ngClass]="{'my-class': stream.remoteUsers.length == 1,
+                        'my-class2':stream.remoteUsers.length == 2
+                          }">
+                        <div class="other-user user2" *ngFor="let i of stream.remoteUsers">
+                            <div id="{{ 'remote-playerlist' + i.uid}}" class="ui centered medium image video-align">
+                            </div>
+                            <p>{{i.name}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 footer" style="flex-grow: 8;">
+                <div class="hang-up footer-icon" style="background-color: red;
+                        color: white" (click)="endCall();stream.type = 'endd'">
+                    <i class="fa fa-phone" aria-hidden="true" style="transform: rotate(135deg);"></i>
+                </div>
+                <div class="video-status footer-icon" style="background-color: white;
+                        color: #838383">
+                    <!-- (click)="stream.videoUpdate()" -->
+                    <!-- <i class="fa fa-video" aria-hidden="true" (click)="setVideo1()"></i>
+                    <img src="../../assets/video-slash-solid.svg" alt="" (click)="setVideo1()"> -->
+                    <i class="fa fa-video" aria-hidden="true" *ngIf="toggleCamera" (click)="setVideo1()"></i>
+                    <img src="../../assets/video-slash-solid.svg" alt="" *ngIf="!toggleCamera" (click)="setVideo1()"
+                        style="width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px;
+      font-size: 25px;
+      border: 1px solid #838383;
+      border-radius: 50px;">
+
+                </div>
+                <div class="mic-status footer-icon" style="background-color: white;
+                        color: #838383">
+                    <!-- (click)="stream.audioUpdate()" -->
+                    <!-- <i class="fa fa-microphone" aria-hidden="true" *ngIf="stream.audioStatus"></i>
+                    <i class="fa fa-microphone-slash" aria-hidden="true" *ngIf="!stream.audioStatus"></i> -->
+                    <i class="fa fa-microphone" aria-hidden="true" *ngIf="toggleAudio" (click)="setAudio1()"></i>
+                    <i class="fa fa-microphone-slash" aria-hidden="true" *ngIf="!toggleAudio" (click)="setAudio1()"></i>
+                </div>
+                <!-- <div class="options footer-icon" style="background-color: white;
+                    background: #555555;
+                    color: #fff;" (click)="showSuccess()">
+                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>

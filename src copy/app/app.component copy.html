@@ -1,0 +1,12 @@
+<button class="btn" (click)="startVideoCall()"> Start Video Call</button>
+<button class="btn" (click)="stopVideoCall()"> Stop Video Call</button>
+
+<div id="local-player"> </div>
+<div id="remote-playerlist"> </div>
+
+<video [hidden]="isCameraOff" #camera id="camera"></video>
+<button (click)="turnOnOffCamera()"> Turn On/Off camera</button>
+<button (click)="muteUnmuteCall()"> Mute/Unmute</button>
+<meter #meter high="0.25" max="1" value="0"></meter>
+
+<router-outlet></router-outlet>
